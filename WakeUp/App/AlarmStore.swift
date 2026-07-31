@@ -17,10 +17,9 @@ final class AlarmStore: ObservableObject {
 
     func prepare() async {
         load()
-        let settings = await UNUserNotificationCenter.current().notificationSettings()
-        if settings.authorizationStatus == .notDetermined {
-            _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .timeSensitive])
-        }
+        // Requesting again lets an upgraded app ask for time-sensitive delivery
+        // even when ordinary notification permission was granted previously.
+        _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .timeSensitive])
         activateIfDue()
     }
 
