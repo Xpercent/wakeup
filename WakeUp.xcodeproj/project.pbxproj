@@ -1,0 +1,60 @@
+// !$*UTF8*$!
+{
+ archiveVersion = 1;
+ classes = {};
+ objectVersion = 56;
+ objects = {
+
+/* Begin PBXBuildFile section */
+    A10000000000000000000011 /* WakeUpApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* WakeUpApp.swift */; };
+    A10000000000000000000012 /* AlarmStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* AlarmStore.swift */; };
+    A10000000000000000000013 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* RootView.swift */; };
+    A10000000000000000000014 /* ChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* ChallengeView.swift */; };
+    A10000000000000000000015 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000005 /* CameraPreview.swift */; };
+    A10000000000000000000016 /* PushUpCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* PushUpCounter.swift */; };
+/* End PBXBuildFile section */
+/* Begin PBXFileReference section */
+    A10000000000000000000001 /* WakeUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpApp.swift; sourceTree = "<group>"; };
+    A10000000000000000000002 /* AlarmStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmStore.swift; sourceTree = "<group>"; };
+    A10000000000000000000003 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+    A10000000000000000000004 /* ChallengeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeView.swift; sourceTree = "<group>"; };
+    A10000000000000000000005 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
+    A10000000000000000000006 /* PushUpCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushUpCounter.swift; sourceTree = "<group>"; };
+    A10000000000000000000007 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+    A10000000000000000000008 /* WakeUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = WakeUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+/* Begin PBXFrameworksBuildPhase section */
+    A10000000000000000000021 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+/* Begin PBXGroup section */
+    A10000000000000000000031 = {isa = PBXGroup; children = (A10000000000000000000032 /* WakeUp */, A10000000000000000000033 /* Products */); sourceTree = "<group>"; };
+    A10000000000000000000032 /* WakeUp */ = {isa = PBXGroup; children = (A10000000000000000000034 /* App */, A10000000000000000000035 /* Resources */); path = WakeUp; sourceTree = "<group>"; };
+    A10000000000000000000033 /* Products */ = {isa = PBXGroup; children = (A10000000000000000000008 /* WakeUp.app */); name = Products; sourceTree = "<group>"; };
+    A10000000000000000000034 /* App */ = {isa = PBXGroup; children = (A10000000000000000000001, A10000000000000000000002, A10000000000000000000003, A10000000000000000000004, A10000000000000000000005, A10000000000000000000006); path = App; sourceTree = "<group>"; };
+    A10000000000000000000035 /* Resources */ = {isa = PBXGroup; children = (A10000000000000000000007); path = Resources; sourceTree = "<group>"; };
+/* End PBXGroup section */
+/* Begin PBXNativeTarget section */
+    A10000000000000000000041 /* WakeUp */ = {isa = PBXNativeTarget; buildConfigurationList = A10000000000000000000042; buildPhases = (A10000000000000000000020 /* Sources */, A10000000000000000000021 /* Frameworks */, A10000000000000000000022 /* Resources */); buildRules = (); dependencies = (); name = WakeUp; productName = WakeUp; productReference = A10000000000000000000008; productType = "com.apple.product-type.application"; };
+/* End PBXNativeTarget section */
+/* Begin PBXProject section */
+    A10000000000000000000051 /* Project object */ = {isa = PBXProject; attributes = { LastUpgradeCheck = 1500; TargetAttributes = { A10000000000000000000041 = { CreatedOnToolsVersion = 15.0; }; }; }; buildConfigurationList = A10000000000000000000052; compatibilityVersion = "Xcode 14.0"; developmentRegion = en; hasScannedForEncodings = 0; knownRegions = (en, Base); mainGroup = A10000000000000000000031; productRefGroup = A10000000000000000000033; projectDirPath = ""; projectRoot = ""; targets = (A10000000000000000000041); };
+/* End PBXProject section */
+/* Begin PBXResourcesBuildPhase section */
+    A10000000000000000000022 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+/* Begin PBXSourcesBuildPhase section */
+    A10000000000000000000020 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000011, A10000000000000000000012, A10000000000000000000013, A10000000000000000000014, A10000000000000000000015, A10000000000000000000016); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+/* Begin XCBuildConfiguration section */
+    A10000000000000000000061 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; IPHONEOS_DEPLOYMENT_TARGET = 17.0; }; name = Debug; };
+    A10000000000000000000062 /* Release */ = {isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; IPHONEOS_DEPLOYMENT_TARGET = 17.0; }; name = Release; };
+    A10000000000000000000063 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = WakeUp/Resources/Info.plist; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = com.xpercent.wakeup; PRODUCT_NAME = "$(TARGET_NAME)"; SDKROOT = iphoneos; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = "1"; }; name = Debug; };
+    A10000000000000000000064 /* Release */ = {isa = XCBuildConfiguration; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_STYLE = Automatic; CURRENT_PROJECT_VERSION = 1; DEVELOPMENT_TEAM = ""; GENERATE_INFOPLIST_FILE = NO; INFOPLIST_FILE = WakeUp/Resources/Info.plist; MARKETING_VERSION = 1.0; PRODUCT_BUNDLE_IDENTIFIER = com.xpercent.wakeup; PRODUCT_NAME = "$(TARGET_NAME)"; SDKROOT = iphoneos; SWIFT_EMIT_LOC_STRINGS = YES; TARGETED_DEVICE_FAMILY = "1"; }; name = Release; };
+/* End XCBuildConfiguration section */
+/* Begin XCConfigurationList section */
+    A10000000000000000000042 = {isa = XCConfigurationList; buildConfigurations = (A10000000000000000000063, A10000000000000000000064); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+    A10000000000000000000052 = {isa = XCConfigurationList; buildConfigurations = (A10000000000000000000061, A10000000000000000000062); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release; };
+/* End XCConfigurationList section */
+ };
+ rootObject = A10000000000000000000051 /* Project object */;
+}
