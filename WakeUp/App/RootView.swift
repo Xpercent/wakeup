@@ -32,6 +32,7 @@ private struct AlarmSetupView: View {
                     Picker("Sound", selection: $store.tone) {
                         ForEach(AlarmTone.allCases) { Text($0.rawValue).tag($0) }
                     }
+                    Stepper("Push-ups: \(store.requiredReps)", value: $store.requiredReps, in: 1...100)
                 }
                 Section {
                     Button(store.isArmed ? "Update Alarm" : "Set Alarm") { Task { await store.arm() } }

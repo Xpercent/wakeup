@@ -10,15 +10,15 @@ struct ChallengeView: View {
             CameraPreview(session: counter.session).ignoresSafeArea()
             LinearGradient(colors: [.clear, .black.opacity(0.78)], startPoint: .center, endPoint: .bottom).ignoresSafeArea()
             VStack(spacing: 16) {
-                Text("\(counter.count) / 15").font(.system(size: 54, weight: .bold, design: .rounded)).monospacedDigit()
-                Text("Complete 15 push-ups to dismiss the alarm").font(.headline)
+                Text("\(counter.count) / \(store.requiredReps)").font(.system(size: 54, weight: .bold, design: .rounded)).monospacedDigit()
+                Text("Complete \(store.requiredReps) push-ups to dismiss the alarm").font(.headline)
                 Text(counter.status).font(.subheadline).foregroundStyle(.secondary)
                 Button("Emergency code") { showEmergency = true }.buttonStyle(.bordered)
             }
             .foregroundStyle(.white).padding(.bottom, 42).padding(.horizontal)
         }
         .task { await counter.start() }
-        .onChange(of: counter.count) { _, value in if value >= 15 { store.finishChallenge() } }
+        .onChange(of: counter.count) { _, value in if value >= store.requiredReps { store.finishChallenge() } }
         .sheet(isPresented: $showEmergency) { EmergencyDismissView() }
     }
 }

@@ -6,6 +6,7 @@ import UserNotifications
 final class AlarmStore: ObservableObject {
     @Published var alarmTime = Calendar.current.date(from: DateComponents(hour: 7, minute: 0)) ?? Date()
     @Published var tone = AlarmTone.defaultTone
+    @Published var requiredReps = 15
     @Published var isArmed = false
     @Published var isChallengeActive = false
     @Published var emergencyCode = ""
@@ -27,7 +28,7 @@ final class AlarmStore: ObservableObject {
         let components = Calendar.current.dateComponents([.hour, .minute], from: alarmTime)
         let content = UNMutableNotificationContent()
         content.title = "WakeUp"
-        content.body = "Open the app and finish your 15 push-ups."
+        content.body = "Open the app and finish your \(requiredReps) push-ups."
         content.sound = tone.notificationSound
         content.categoryIdentifier = "WAKEUP_ALARM"
 
@@ -79,6 +80,7 @@ final class AlarmStore: ObservableObject {
     private func save() {
         defaults.set(alarmTime.timeIntervalSinceReferenceDate, forKey: "alarmTime")
         defaults.set(tone.rawValue, forKey: "tone")
+        defaults.set(requiredReps, forKey: "requiredReps")
         defaults.set(isArmed, forKey: "isArmed")
         if isArmed { ensureEmergencyCode() }
     }
@@ -88,6 +90,9 @@ final class AlarmStore: ObservableObject {
             alarmTime = Date(timeIntervalSinceReferenceDate: defaults.double(forKey: "alarmTime"))
         }
         tone = AlarmTone(rawValue: defaults.string(forKey: "tone") ?? "") ?? .defaultTone
+        if defaults.object(forKey: "requiredReps") != nil {
+            requiredReps = max(1, min(defaults.integer(forKey: "requiredReps"), 100))
+        }
         isArmed = defaults.bool(forKey: "isArmed")
         emergencyCode = defaults.string(forKey: "emergencyCode") ?? ""
         if isArmed { ensureEmergencyCode() }
@@ -95,10 +100,10 @@ final class AlarmStore: ObservableObject {
 }
 
 enum AlarmTone: String, CaseIterable, Identifiable {
-    case defaultTone = "Default"
-    case alarm = "Alarm"
-    case alert = "Alert"
+    case defaultTone = "System Default"
+    case wakeUpAlarm = "WakeUp Alarm"
     var id: String { rawValue }
-    // Named CAF files can be added later; keep every selection functional until then.
-    var notificationSound: UNNotificationSound { .default }
+    var notificationSound: UNNotificationSound {
+        self == .defaultTone ? .default : UNNotificationSound(named: UNNotificationSoundName(rawValue: "WakeUpAlarm.wav"))
+    }
 }
