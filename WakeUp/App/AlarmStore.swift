@@ -19,7 +19,7 @@ final class AlarmStore: ObservableObject {
         load()
         let settings = await UNUserNotificationCenter.current().notificationSettings()
         if settings.authorizationStatus == .notDetermined {
-            _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
+            _ = try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge, .timeSensitive])
         }
         activateIfDue()
     }
@@ -30,6 +30,7 @@ final class AlarmStore: ObservableObject {
         content.title = "WakeUp"
         content.body = "Open the app and finish your \(requiredReps) push-ups."
         content.sound = tone.notificationSound
+        content.interruptionLevel = .timeSensitive
         content.categoryIdentifier = "WAKEUP_ALARM"
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
