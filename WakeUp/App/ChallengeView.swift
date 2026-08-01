@@ -19,7 +19,7 @@ struct ChallengeView: View {
             .foregroundStyle(.white).padding(.bottom, 42).padding(.horizontal)
         }
         .task {
-            alarmAudio.start()
+            alarmAudio.start(soundURL: store.selectedSoundURL)
             await counter.start()
         }
         .onChange(of: counter.count) { _, value in if value >= store.requiredReps { store.finishChallenge() } }

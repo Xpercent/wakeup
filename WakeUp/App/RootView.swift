@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 struct RootView: View {
     @EnvironmentObject private var alarmStore: AlarmStore
@@ -25,14 +26,20 @@ struct RootView: View {
 
 private struct AlarmSetupView: View {
     @EnvironmentObject private var store: AlarmStore
+    @State private var showSoundImporter = false
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("Alarm") {
                     DatePicker("Time", selection: $store.alarmTime, displayedComponents: .hourAndMinute)
-                    Picker("Sound", selection: $store.tone) {
-                        ForEach(AlarmTone.allCases) { Text($0.rawValue).tag($0) }
+                    Picker("Sound", selection: $store.selectedSoundFile) {
+                        ForEach(store.soundFiles, id: \.self) { Text($0).tag($0) }
+                    }
+                    Button {
+                        showSoundImporter = true
+                    } label: {
+                        Label("Add Sound", systemImage: "plus")
                     }
                     Stepper("Push-ups: \(store.requiredReps)", value: $store.requiredReps, in: 1...100)
                 }
@@ -53,6 +60,12 @@ private struct AlarmSetupView: View {
                 }
             }
             .navigationTitle("WakeUp")
+            .fileImporter(isPresented: $showSoundImporter, allowedContentTypes: [.wav]) { result in
+                switch result {
+                case .success(let url): store.importSound(from: url)
+                case .failure(let error): store.errorMessage = "Could not select the sound: \(error.localizedDescription)"
+                }
+            }
         }
     }
 }

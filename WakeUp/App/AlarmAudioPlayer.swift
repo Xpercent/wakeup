@@ -4,9 +4,8 @@ import Combine
 final class AlarmAudioPlayer: ObservableObject {
     private var player: AVAudioPlayer?
 
-    func start() {
-        guard player?.isPlaying != true,
-              let soundURL = Bundle.main.url(forResource: "WakeUpAlarm", withExtension: "wav") else { return }
+    func start(soundURL: URL?) {
+        guard player?.isPlaying != true, let soundURL else { return }
         do {
             let session = AVAudioSession.sharedInstance()
             try session.setCategory(.playback, mode: .default, options: [.duckOthers])
