@@ -42,6 +42,16 @@ private struct AlarmSetupView: View {
                         Label("Add Sound", systemImage: "plus")
                     }
                     Stepper("Push-ups: \(store.requiredReps)", value: $store.requiredReps, in: 1...100)
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack {
+                            Text("App volume")
+                            Spacer()
+                            Text("\(Int(store.playbackVolume * 100))%")
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                        }
+                        Slider(value: $store.playbackVolume, in: 0...1, step: 0.05)
+                    }
                 }
                 Section {
                     Button(store.isArmed ? "Update Alarm" : "Set Alarm") { Task { await store.arm() } }

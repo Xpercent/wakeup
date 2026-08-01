@@ -9,12 +9,17 @@ final class AlarmStore: ObservableObject {
     @Published var soundFiles: [String] = []
     @Published var selectedSoundFile = "Alarm-radar.wav"
     @Published var requiredReps = 15
+    @Published var playbackVolume: Double = 1.0
     @Published var isArmed = false
     @Published var isChallengeActive = false
     @Published var emergencyCode = ""
     @Published var errorMessage: String?
 
     private let notificationID = "wakeup.alarm"
+    private let dailyNotificationID = "wakeup.alarm.daily"
+    private let burstNotificationPrefix = "wakeup.alarm.burst."
+    private let burstCount = 63 // iOS keeps at most 64 pending notifications per app.
+    private let burstInterval: TimeInterval = 15
     private let defaults = UserDefaults.standard
     private let fileManager = FileManager.default
 
@@ -51,11 +56,22 @@ final class AlarmStore: ObservableObject {
         content.interruptionLevel = .timeSensitive
         content.categoryIdentifier = "WAKEUP_ALARM"
 
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
-        let request = UNNotificationRequest(identifier: notificationID, content: content, trigger: trigger)
         do {
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationID])
-            try await UNUserNotificationCenter.current().add(request)
+            removePendingAlarms()
+            // Keep a daily notification for future days.
+            let dailyTrigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+            try await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: dailyNotificationID, content: content, trigger: dailyTrigger))
+
+            // The one-shot burst makes the alarm audible for roughly 16 minutes
+            // on the lock screen. The daily notification above plays the first sound.
+            let nextAlarm = nextAlarmDate(from: components)
+            for index in 1..<burstCount {
+                let fireDate = nextAlarm.addingTimeInterval(Double(index) * burstInterval)
+                let interval = max(1, fireDate.timeIntervalSinceNow)
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
+                let request = UNNotificationRequest(identifier: "\(burstNotificationPrefix)\(index)", content: content, trigger: trigger)
+                try await UNUserNotificationCenter.current().add(request)
+            }
             isArmed = true
             save()
         } catch {
@@ -94,7 +110,7 @@ final class AlarmStore: ObservableObject {
     }
 
     func disarm() {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationID])
+        removePendingAlarms()
         isArmed = false
         isChallengeActive = false
         save()
@@ -124,6 +140,20 @@ final class AlarmStore: ObservableObject {
         soundFiles = Set((bundled + imported).map(\.lastPathComponent))
             .filter { $0.lowercased().hasSuffix(".wav") }
             .sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+    }
+
+    private func nextAlarmDate(from components: DateComponents) -> Date {
+        let calendar = Calendar.current
+        let now = Date()
+        let today = calendar.date(bySettingHour: components.hour ?? 0, minute: components.minute ?? 0, second: 0, of: now) ?? now
+        return today > now ? today : calendar.date(byAdding: .day, value: 1, to: today) ?? today
+    }
+
+    private func removePendingAlarms() {
+        var identifiers = [dailyNotificationID]
+        identifiers.append(contentsOf: (0..<burstCount).map { "\(burstNotificationPrefix)\($0)" })
+        identifiers.append(notificationID)
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
     }
 
     private func soundURL(for fileName: String) -> URL? {
@@ -180,6 +210,7 @@ final class AlarmStore: ObservableObject {
         defaults.set(alarmTime.timeIntervalSinceReferenceDate, forKey: "alarmTime")
         defaults.set(selectedSoundFile, forKey: "selectedSoundFile")
         defaults.set(requiredReps, forKey: "requiredReps")
+        defaults.set(playbackVolume, forKey: "playbackVolume")
         defaults.set(isArmed, forKey: "isArmed")
         if isArmed { ensureEmergencyCode() }
     }
@@ -191,6 +222,9 @@ final class AlarmStore: ObservableObject {
         selectedSoundFile = defaults.string(forKey: "selectedSoundFile") ?? "Alarm-radar.wav"
         if defaults.object(forKey: "requiredReps") != nil {
             requiredReps = max(1, min(defaults.integer(forKey: "requiredReps"), 100))
+        }
+        if defaults.object(forKey: "playbackVolume") != nil {
+            playbackVolume = min(1, max(0, defaults.double(forKey: "playbackVolume")))
         }
         isArmed = defaults.bool(forKey: "isArmed")
         emergencyCode = defaults.string(forKey: "emergencyCode") ?? ""
