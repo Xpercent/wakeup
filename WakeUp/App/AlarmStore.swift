@@ -16,6 +16,11 @@ final class AlarmStore: ObservableObject {
     private let defaults = UserDefaults.standard
 
     func prepare() async {
+        do {
+            try installNotificationSound()
+        } catch {
+            errorMessage = "Could not prepare the alarm sound: \(error.localizedDescription)"
+        }
         load()
         // Requesting again lets an upgraded app ask for time-sensitive delivery
         // even when ordinary notification permission was granted previously.
@@ -24,6 +29,14 @@ final class AlarmStore: ObservableObject {
     }
 
     func arm() async {
+        if tone == .wakeUpAlarm {
+            do {
+                try installNotificationSound()
+            } catch {
+                errorMessage = "Could not prepare the alarm sound: \(error.localizedDescription)"
+                return
+            }
+        }
         let components = Calendar.current.dateComponents([.hour, .minute], from: alarmTime)
         let content = UNMutableNotificationContent()
         content.title = "WakeUp"
@@ -77,6 +90,28 @@ final class AlarmStore: ObservableObject {
         }
     }
 
+    private func installNotificationSound() throws {
+        let fileManager = FileManager.default
+        guard let bundledSound = Bundle.main.url(forResource: "WakeUpAlarm", withExtension: "wav") else {
+            throw SoundInstallationError.resourceMissing
+        }
+        guard let libraryDirectory = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+            throw SoundInstallationError.libraryDirectoryUnavailable
+        }
+
+        let soundsDirectory = libraryDirectory.appendingPathComponent("Sounds", isDirectory: true)
+        let installedSound = soundsDirectory.appendingPathComponent("WakeUpAlarm.wav")
+        try fileManager.createDirectory(at: soundsDirectory, withIntermediateDirectories: true)
+
+        if fileManager.fileExists(atPath: installedSound.path) {
+            let bundledSize = try bundledSound.resourceValues(forKeys: [.fileSizeKey]).fileSize
+            let installedSize = try installedSound.resourceValues(forKeys: [.fileSizeKey]).fileSize
+            if bundledSize == installedSize { return }
+            try fileManager.removeItem(at: installedSound)
+        }
+        try fileManager.copyItem(at: bundledSound, to: installedSound)
+    }
+
     private func save() {
         defaults.set(alarmTime.timeIntervalSinceReferenceDate, forKey: "alarmTime")
         defaults.set(tone.rawValue, forKey: "tone")
@@ -96,6 +131,18 @@ final class AlarmStore: ObservableObject {
         isArmed = defaults.bool(forKey: "isArmed")
         emergencyCode = defaults.string(forKey: "emergencyCode") ?? ""
         if isArmed { ensureEmergencyCode() }
+    }
+}
+
+private enum SoundInstallationError: LocalizedError {
+    case resourceMissing
+    case libraryDirectoryUnavailable
+
+    var errorDescription: String? {
+        switch self {
+        case .resourceMissing: return "WakeUpAlarm.wav is missing from the app bundle."
+        case .libraryDirectoryUnavailable: return "The app Library directory is unavailable."
+        }
     }
 }
 
