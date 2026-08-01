@@ -99,17 +99,30 @@ final class AlarmStore: ObservableObject {
             throw SoundInstallationError.libraryDirectoryUnavailable
         }
 
-        let soundsDirectory = libraryDirectory.appendingPathComponent("Sounds", isDirectory: true)
-        let installedSound = soundsDirectory.appendingPathComponent("WakeUpAlarm.wav")
-        try fileManager.createDirectory(at: soundsDirectory, withIntermediateDirectories: true)
+        var soundsDirectories = [libraryDirectory.appendingPathComponent("Sounds", isDirectory: true)]
 
-        if fileManager.fileExists(atPath: installedSound.path) {
-            let bundledSize = try bundledSound.resourceValues(forKeys: [.fileSizeKey]).fileSize
-            let installedSize = try installedSound.resourceValues(forKeys: [.fileSizeKey]).fileSize
-            if bundledSize == installedSize { return }
-            try fileManager.removeItem(at: installedSound)
+        // LiveContainer redirects HOME to the guest data folder but submits
+        // notifications using the host bundle identifier. usernotificationsd
+        // therefore resolves custom sounds from the host container instead.
+        if let liveContainerHome = ProcessInfo.processInfo.environment["LC_HOME_PATH"], !liveContainerHome.isEmpty {
+            let hostSounds = URL(fileURLWithPath: liveContainerHome, isDirectory: true)
+                .appendingPathComponent("Library/Sounds", isDirectory: true)
+            if !soundsDirectories.contains(where: { $0.standardizedFileURL == hostSounds.standardizedFileURL }) {
+                soundsDirectories.append(hostSounds)
+            }
         }
-        try fileManager.copyItem(at: bundledSound, to: installedSound)
+
+        for soundsDirectory in soundsDirectories {
+            try fileManager.createDirectory(at: soundsDirectory, withIntermediateDirectories: true)
+            let installedSound = soundsDirectory.appendingPathComponent("WakeUpAlarm.wav")
+            if fileManager.fileExists(atPath: installedSound.path) {
+                let bundledSize = try bundledSound.resourceValues(forKeys: [.fileSizeKey]).fileSize
+                let installedSize = try installedSound.resourceValues(forKeys: [.fileSizeKey]).fileSize
+                if bundledSize == installedSize { continue }
+                try fileManager.removeItem(at: installedSound)
+            }
+            try fileManager.copyItem(at: bundledSound, to: installedSound)
+        }
     }
 
     private func save() {
