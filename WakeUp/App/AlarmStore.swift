@@ -19,7 +19,6 @@ final class AlarmStore: ObservableObject {
     private let dailyNotificationID = "wakeup.alarm.daily"
     private let burstNotificationPrefix = "wakeup.alarm.burst."
     private let burstCount = 63 // iOS keeps at most 64 pending notifications per app.
-    private let burstInterval: TimeInterval = 15
     private let defaults = UserDefaults.standard
     private let fileManager = FileManager.default
 
@@ -62,9 +61,10 @@ final class AlarmStore: ObservableObject {
             let dailyTrigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
             try await UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: dailyNotificationID, content: content, trigger: dailyTrigger))
 
-            // The one-shot burst makes the alarm audible for roughly 16 minutes
-            // on the lock screen. The daily notification above plays the first sound.
+            // The one-shot burst continues the selected sound on the lock screen.
+            // The daily notification above plays the first sound.
             let nextAlarm = nextAlarmDate(from: components)
+            let burstInterval = notificationRepeatInterval()
             for index in 1..<burstCount {
                 let fireDate = nextAlarm.addingTimeInterval(Double(index) * burstInterval)
                 let interval = max(1, fireDate.timeIntervalSinceNow)
@@ -154,6 +154,12 @@ final class AlarmStore: ObservableObject {
         identifiers.append(contentsOf: (0..<burstCount).map { "\(burstNotificationPrefix)\($0)" })
         identifiers.append(notificationID)
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+    }
+
+    private func notificationRepeatInterval() -> TimeInterval {
+        guard let soundURL = selectedSoundURL,
+              let audio = try? AVAudioPlayer(contentsOf: soundURL) else { return 15 }
+        return min(30, max(2, audio.duration + 0.25))
     }
 
     private func soundURL(for fileName: String) -> URL? {
