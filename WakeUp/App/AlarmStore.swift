@@ -116,9 +116,6 @@ final class AlarmStore: ObservableObject {
             try fileManager.createDirectory(at: soundsDirectory, withIntermediateDirectories: true)
             let installedSound = soundsDirectory.appendingPathComponent("WakeUpAlarm.wav")
             if fileManager.fileExists(atPath: installedSound.path) {
-                let bundledSize = try bundledSound.resourceValues(forKeys: [.fileSizeKey]).fileSize
-                let installedSize = try installedSound.resourceValues(forKeys: [.fileSizeKey]).fileSize
-                if bundledSize == installedSize { continue }
                 try fileManager.removeItem(at: installedSound)
             }
             try fileManager.copyItem(at: bundledSound, to: installedSound)
@@ -161,9 +158,16 @@ private enum SoundInstallationError: LocalizedError {
 
 enum AlarmTone: String, CaseIterable, Identifiable {
     case defaultTone = "System Default"
-    case wakeUpAlarm = "WakeUp Alarm"
+    case wakeUpAlarm = "Radar Pulse"
     var id: String { rawValue }
     var notificationSound: UNNotificationSound {
-        self == .defaultTone ? .default : UNNotificationSound(named: UNNotificationSoundName(rawValue: "WakeUpAlarm.wav"))
+        switch self {
+        case .defaultTone:
+            if #available(iOS 26.0, *) { return .defaultRingtone }
+            // LiveContainer does not consistently deliver UNNotificationSound.default.
+            return UNNotificationSound(named: UNNotificationSoundName(rawValue: "WakeUpAlarm.wav"))
+        case .wakeUpAlarm:
+            return UNNotificationSound(named: UNNotificationSoundName(rawValue: "WakeUpAlarm.wav"))
+        }
     }
 }

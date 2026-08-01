@@ -13,6 +13,7 @@
     A10000000000000000000015 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000005 /* CameraPreview.swift */; };
     A10000000000000000000016 /* PushUpCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000006 /* PushUpCounter.swift */; };
     A10000000000000000000017 /* WakeUpAlarm.wav in Resources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000009 /* WakeUpAlarm.wav */; };
+    A10000000000000000000018 /* AlarmAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1000000000000000000000A /* AlarmAudioPlayer.swift */; };
 /* End PBXBuildFile section */
 /* Begin PBXFileReference section */
     A10000000000000000000001 /* WakeUpApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakeUpApp.swift; sourceTree = "<group>"; };
@@ -24,6 +25,7 @@
     A10000000000000000000007 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
     A10000000000000000000008 /* WakeUp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = WakeUp.app; sourceTree = BUILT_PRODUCTS_DIR; };
     A10000000000000000000009 /* WakeUpAlarm.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = WakeUpAlarm.wav; sourceTree = "<group>"; };
+    A1000000000000000000000A /* AlarmAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmAudioPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 /* Begin PBXFrameworksBuildPhase section */
     A10000000000000000000021 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
@@ -32,7 +34,7 @@
     A10000000000000000000031 = {isa = PBXGroup; children = (A10000000000000000000032 /* WakeUp */, A10000000000000000000033 /* Products */); sourceTree = "<group>"; };
     A10000000000000000000032 /* WakeUp */ = {isa = PBXGroup; children = (A10000000000000000000034 /* App */, A10000000000000000000035 /* Resources */); path = WakeUp; sourceTree = "<group>"; };
     A10000000000000000000033 /* Products */ = {isa = PBXGroup; children = (A10000000000000000000008 /* WakeUp.app */); name = Products; sourceTree = "<group>"; };
-    A10000000000000000000034 /* App */ = {isa = PBXGroup; children = (A10000000000000000000001, A10000000000000000000002, A10000000000000000000003, A10000000000000000000004, A10000000000000000000005, A10000000000000000000006); path = App; sourceTree = "<group>"; };
+    A10000000000000000000034 /* App */ = {isa = PBXGroup; children = (A10000000000000000000001, A10000000000000000000002, A10000000000000000000003, A10000000000000000000004, A10000000000000000000005, A10000000000000000000006, A1000000000000000000000A); path = App; sourceTree = "<group>"; };
     A10000000000000000000035 /* Resources */ = {isa = PBXGroup; children = (A10000000000000000000007, A10000000000000000000009); path = Resources; sourceTree = "<group>"; };
 /* End PBXGroup section */
 /* Begin PBXNativeTarget section */
@@ -45,7 +47,7 @@
     A10000000000000000000022 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000017); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXResourcesBuildPhase section */
 /* Begin PBXSourcesBuildPhase section */
-    A10000000000000000000020 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000011, A10000000000000000000012, A10000000000000000000013, A10000000000000000000014, A10000000000000000000015, A10000000000000000000016); runOnlyForDeploymentPostprocessing = 0; };
+    A10000000000000000000020 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000011, A10000000000000000000012, A10000000000000000000013, A10000000000000000000014, A10000000000000000000015, A10000000000000000000016, A10000000000000000000018); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 /* Begin XCBuildConfiguration section */
     A10000000000000000000061 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0; IPHONEOS_DEPLOYMENT_TARGET = 17.0; }; name = Debug; };

@@ -3,6 +3,7 @@ import SwiftUI
 struct ChallengeView: View {
     @EnvironmentObject private var store: AlarmStore
     @StateObject private var counter = PushUpCounter()
+    @StateObject private var alarmAudio = AlarmAudioPlayer()
     @State private var showEmergency = false
 
     var body: some View {
@@ -17,9 +18,13 @@ struct ChallengeView: View {
             }
             .foregroundStyle(.white).padding(.bottom, 42).padding(.horizontal)
         }
-        .task { await counter.start() }
+        .task {
+            alarmAudio.start()
+            await counter.start()
+        }
         .onChange(of: counter.count) { _, value in if value >= store.requiredReps { store.finishChallenge() } }
         .sheet(isPresented: $showEmergency) { EmergencyDismissView() }
+        .onDisappear { alarmAudio.stop() }
     }
 }
 

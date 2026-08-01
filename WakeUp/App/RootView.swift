@@ -3,6 +3,7 @@ import UIKit
 
 struct RootView: View {
     @EnvironmentObject private var alarmStore: AlarmStore
+    private let alarmCheck = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var body: some View {
         Group {
@@ -18,6 +19,7 @@ struct RootView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             alarmStore.activateIfDue()
         }
+        .onReceive(alarmCheck) { _ in alarmStore.activateIfDue() }
     }
 }
 
