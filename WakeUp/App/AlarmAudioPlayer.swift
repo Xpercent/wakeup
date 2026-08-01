@@ -4,7 +4,7 @@ import Combine
 final class AlarmAudioPlayer: ObservableObject {
     private var player: AVAudioPlayer?
 
-    func start(soundURL: URL?, volume: Double) {
+    func start(soundURL: URL?) {
         guard player?.isPlaying != true, let soundURL else { return }
         do {
             let session = AVAudioSession.sharedInstance()
@@ -12,7 +12,7 @@ final class AlarmAudioPlayer: ObservableObject {
             try session.setActive(true)
             let player = try AVAudioPlayer(contentsOf: soundURL)
             player.numberOfLoops = -1
-            player.volume = Float(min(1, max(0, volume)))
+            player.volume = 1
             player.prepareToPlay()
             player.play()
             self.player = player

@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
+import MediaPlayer
 
 struct RootView: View {
     @EnvironmentObject private var alarmStore: AlarmStore
@@ -43,14 +44,8 @@ private struct AlarmSetupView: View {
                     }
                     Stepper("Push-ups: \(store.requiredReps)", value: $store.requiredReps, in: 1...100)
                     VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            Text("App volume")
-                            Spacer()
-                            Text("\(Int(store.playbackVolume * 100))%")
-                                .monospacedDigit()
-                                .foregroundStyle(.secondary)
-                        }
-                        Slider(value: $store.playbackVolume, in: 0...1, step: 0.05)
+                        Text("Media volume")
+                        SystemVolumeControl().frame(height: 30)
                     }
                 }
                 Section {
@@ -78,4 +73,14 @@ private struct AlarmSetupView: View {
             }
         }
     }
+}
+
+private struct SystemVolumeControl: UIViewRepresentable {
+    func makeUIView(context: Context) -> MPVolumeView {
+        let view = MPVolumeView(frame: .zero)
+        view.showsRouteButton = false
+        return view
+    }
+
+    func updateUIView(_ uiView: MPVolumeView, context: Context) {}
 }

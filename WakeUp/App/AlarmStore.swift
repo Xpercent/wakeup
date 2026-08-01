@@ -9,7 +9,6 @@ final class AlarmStore: ObservableObject {
     @Published var soundFiles: [String] = []
     @Published var selectedSoundFile = "Alarm-radar.wav"
     @Published var requiredReps = 15
-    @Published var playbackVolume: Double = 1.0
     @Published var isArmed = false
     @Published var isChallengeActive = false
     @Published var emergencyCode = ""
@@ -216,7 +215,6 @@ final class AlarmStore: ObservableObject {
         defaults.set(alarmTime.timeIntervalSinceReferenceDate, forKey: "alarmTime")
         defaults.set(selectedSoundFile, forKey: "selectedSoundFile")
         defaults.set(requiredReps, forKey: "requiredReps")
-        defaults.set(playbackVolume, forKey: "playbackVolume")
         defaults.set(isArmed, forKey: "isArmed")
         if isArmed { ensureEmergencyCode() }
     }
@@ -228,9 +226,6 @@ final class AlarmStore: ObservableObject {
         selectedSoundFile = defaults.string(forKey: "selectedSoundFile") ?? "Alarm-radar.wav"
         if defaults.object(forKey: "requiredReps") != nil {
             requiredReps = max(1, min(defaults.integer(forKey: "requiredReps"), 100))
-        }
-        if defaults.object(forKey: "playbackVolume") != nil {
-            playbackVolume = min(1, max(0, defaults.double(forKey: "playbackVolume")))
         }
         isArmed = defaults.bool(forKey: "isArmed")
         emergencyCode = defaults.string(forKey: "emergencyCode") ?? ""
